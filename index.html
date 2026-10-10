@@ -1,251 +1,405 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Player Profile Template</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skogen, Bjørn FIDE Chess Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #ebf0f5;
+            color: #0d1b3e;
+            overflow-x: hidden;
+        }
+
+        /* Diagonal stripes matching exact screenshot background decorations */
+        .bg-stripes-pattern {
+            background-image: repeating-linear-gradient(
+                -45deg,
+                rgba(255, 255, 255, 0.75),
+                rgba(255, 255, 255, 0.75) 10px,
+                transparent 10px,
+                transparent 22px
+            );
+        }
+
+        .bg-stripes-left {
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.8),
+                rgba(255, 255, 255, 0.8) 6px,
+                transparent 6px,
+                transparent 14px
+            );
+        }
+
+        /* Exact card styling and drop shadows */
+        .fide-card {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+            border-radius: 4px;
+        }
+
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        /* Watermark silhouette styling */
+        .chess-king-watermark {
+            position: absolute;
+            right: 40px;
+            bottom: 0px;
+            width: 140px;
+            height: 320px;
+            opacity: 0.85;
+            pointer-events: none;
+            z-index: 5;
+            filter: drop-shadow(0px 0px 8px rgba(30, 48, 80, 0.15));
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between relative antialiased selection:bg-blue-100 selection:text-blue-900">
 
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="#">
-        <span class="brand-mark">&#9822;</span>
-        <span class="brand-text"><small>Open</small>Chess Ratings</span>
-      </a>
-      <button class="burger" id="burger" aria-label="Toggle menu"><span></span></button>
-      <nav class="main-nav" id="mainNav">
-        <a href="#">News</a>
-        <a href="#" class="active">Ratings</a>
-        <a href="#">Events</a>
-        <a href="#">Calendar</a>
-        <a href="#">Directory</a>
-        <a href="#">About</a>
-      </nav>
+    <!-- MAIN TOP NAVIGATION HEADER -->
+    <header class="w-full bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-[1380px] mx-auto px-4 sm:px-8 h-[72px] flex items-center justify-between">
+            <!-- FIDE LOGO EXACT VECTOR RECREATION -->
+            <a href="#" class="flex items-center space-x-3 group">
+                <svg class="w-12 h-12 text-[#1c2d5a]" viewBox="0 0 120 120" fill="currentColor">
+                    <!-- FIDE Globe Oval with Latitude Lines -->
+                    <path d="M60 10 C25 10 5 32 5 60 C5 88 25 110 60 110 C95 110 115 88 115 60 C115 32 95 10 60 10 Z" fill="#1c2d5a" />
+                    <!-- Globe Latitude/Longitude White Cuts -->
+                    <path d="M12 40 H108 M8 60 H112 M12 80 H108 M32 18 C 45 40 45 80 32 102 M88 18 C 75 40 75 80 88 102" stroke="#ffffff" stroke-width="2.5" fill="none" />
+                    <!-- Knight Chess Piece Outline Overlay -->
+                    <path d="M50 32 C52 26 62 26 65 32 C65 35 60 38 60 42 C68 40 78 46 76 56 C74 62 68 64 68 68 C74 68 80 72 80 78 C80 84 72 86 68 86 C68 90 70 92 72 92 H44 C46 92 48 90 48 86 C44 86 36 84 36 78 C36 72 42 68 48 68 C48 64 42 62 40 56 C38 46 48 40 56 42 C56 38 50 35 50 32 Z" fill="#ffffff" />
+                </svg>
+                <div class="flex flex-col justify-center leading-none">
+                    <span class="text-[17px] font-extrabold text-[#1c2d5a] tracking-tight">International</span>
+                    <span class="text-[17px] font-extrabold text-[#1c2d5a] tracking-tight">Chess Federation</span>
+                </div>
+            </a>
+
+            <!-- TOP MAIN MENU -->
+            <nav class="hidden lg:flex items-center space-x-6 text-[12px] font-bold text-[#1c2d5a] tracking-wider">
+                <a href="#" class="hover:text-blue-700 transition">NEWS</a>
+                <a href="#" class="bg-[#1c2d5a] text-white px-4 py-2 rounded-[18px] transition font-bold">RATINGS</a>
+                <a href="#" class="hover:text-blue-700 transition">CHAMPIONSHIP</a>
+                <a href="#" class="hover:text-blue-700 transition">CALENDAR</a>
+                <a href="#" class="hover:text-blue-700 transition">FIDE</a>
+                <a href="#" class="hover:text-blue-700 transition">DIRECTORY</a>
+                <a href="#" class="hover:text-blue-700 transition">PARTNERS</a>
+                <a href="#" class="hover:text-blue-700 transition">SHOP</a>
+                <a href="#" class="hover:text-blue-700 transition">CONTACTS</a>
+            </nav>
+        </div>
+
+        <!-- SUB NAV STRIP -->
+        <div class="bg-[#dbe2eb] border-t border-gray-300 py-1.5">
+            <div class="max-w-[1380px] mx-auto px-4 sm:px-8 flex items-center space-x-2 text-[12px] font-medium text-[#1c2d5a] overflow-x-auto">
+                <a href="#" class="bg-white px-3 py-1 rounded shadow-sm font-semibold text-[#1c2d5a]">Top</a>
+                <a href="#" class="bg-[#dbe2eb] hover:bg-white/60 px-3 py-1 rounded transition text-gray-700 font-semibold">Top Federations</a>
+                <a href="#" class="bg-[#dbe2eb] hover:bg-white/60 px-3 py-1 rounded transition text-gray-700 font-semibold">Tournaments</a>
+                <a href="#" class="bg-[#dbe2eb] hover:bg-white/60 px-3 py-1 rounded transition text-gray-700 font-semibold">Titles</a>
+                <a href="#" class="bg-[#dbe2eb] hover:bg-white/60 px-3 py-1 rounded transition text-gray-700 font-semibold">Transfers</a>
+                <a href="#" class="bg-[#dbe2eb] hover:bg-white/60 px-3 py-1 rounded transition text-gray-700 font-semibold">Calculators</a>
+                <a href="#" class="bg-[#dbe2eb] hover:bg-white/60 px-3 py-1 rounded transition text-gray-700 font-semibold">Download</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- FLOATING RIGHT SOCIAL MEDIA WIDGET -->
+    <aside class="fixed right-2 top-1/2 -translate-y-1/2 z-40 hidden sm:flex flex-col space-y-2.5 bg-transparent p-1">
+        <!-- X (Twitter) -->
+        <a href="#" class="w-6 h-6 flex items-center justify-center text-[#1c2d5a] hover:opacity-75 transition">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <!-- Instagram -->
+        <a href="#" class="w-6 h-6 flex items-center justify-center text-[#1c2d5a] hover:opacity-75 transition">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <!-- Facebook -->
+        <a href="#" class="w-6 h-6 flex items-center justify-center text-[#1c2d5a] hover:opacity-75 transition">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"/></svg>
+        </a>
+        <!-- TikTok -->
+        <a href="#" class="w-6 h-6 flex items-center justify-center text-[#1c2d5a] hover:opacity-75 transition">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.56-1.31 1.52-1.33 2.51-.01.99.41 1.98 1.19 2.59.88.69 2.08.87 3.13.51 1.02-.34 1.83-1.2 2.05-2.25.08-.47.09-.95.09-1.43-.01-5.11-.01-10.22-.01-15.34z"/></svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href="#" class="w-6 h-6 flex items-center justify-center text-[#1c2d5a] hover:opacity-75 transition">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </a>
+        <!-- YouTube -->
+        <a href="#" class="w-6 h-6 flex items-center justify-center text-[#1c2d5a] hover:opacity-75 transition">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+        <!-- Twitch -->
+        <a href="#" class="w-6 h-6 flex items-center justify-center text-[#1c2d5a] hover:opacity-75 transition">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143h-1.715zm4.715 0h1.714v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+        </a>
+    </aside>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-[1380px] mx-auto px-4 sm:px-8 py-8 w-full flex-grow relative">
+        
+        <!-- DECORATIVE BACKGROUND STRIPED BOXES -->
+        <div class="absolute left-0 top-12 w-28 h-28 bg-[#cdd7e5] opacity-60 rounded-sm -z-10"></div>
+        <div class="absolute left-6 top-20 w-32 h-32 bg-[#bfccde] opacity-40 rounded-sm -z-10"></div>
+        <div class="absolute left-0 top-80 w-16 h-16 bg-stripes-left -z-10"></div>
+        <div class="absolute right-0 bottom-4 w-96 h-64 bg-stripes-pattern -z-10"></div>
+
+        <!-- PLAYER NAME HEADER -->
+        <h1 class="text-[34px] font-bold text-[#1c2d5a] mb-6 tracking-tight">Skogen, Bjørn</h1>
+
+        <!-- PROFILE LAYOUT GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative z-10">
+            
+            <!-- LEFT CARD: PLAYER BIO & RATINGS -->
+            <div class="lg:col-span-4 fide-card p-6">
+                <!-- RATINGS GRID (STANDARD, RAPID, BLITZ) -->
+                <div class="grid grid-cols-3 gap-2 pb-6 border-b border-gray-100 text-center">
+                    <!-- Standard Rating -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-6 h-6 mb-1 text-[#1c2d5a] flex items-center justify-center">
+                            <!-- Standard Chessboard Icon -->
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                <path d="M3 3h18v18H3V3zm2 2v4h4V5H5zm6 0v4h4V5h-4zm6 0v4h4V5h-4zM5 11v4h4v-4H5zm6 0v4h4v-4h-4zm6 0v4h4v-4h-4zM5 17v2h4v-2H5zm6 0v2h4v-2h-4zm6 0v2h4v-2h-4z"/>
+                            </svg>
+                        </div>
+                        <div class="font-bold text-[17px] text-[#1c2d5a] leading-tight">1926</div>
+                        <div class="text-[9px] font-extrabold text-gray-400 tracking-wider uppercase mt-0.5">STANDARD</div>
+                    </div>
+
+                    <!-- Rapid Rating -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-6 h-6 mb-1 text-[#1c2d5a] flex items-center justify-center">
+                            <!-- Clock Icon -->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="9"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 3"/>
+                            </svg>
+                        </div>
+                        <div class="font-bold text-[17px] text-[#1c2d5a] leading-tight">1821</div>
+                        <div class="text-[9px] font-extrabold text-gray-400 tracking-wider uppercase mt-0.5">RAPID</div>
+                    </div>
+
+                    <!-- Blitz Rating -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-6 h-6 mb-1 text-[#1c2d5a] flex items-center justify-center">
+                            <!-- Lightning Bolt Icon -->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <div class="font-bold text-[17px] text-[#1c2d5a] leading-tight">2039</div>
+                        <div class="text-[9px] font-extrabold text-gray-400 tracking-wider uppercase mt-0.5">BLITZ</div>
+                    </div>
+                </div>
+
+                <!-- PLAYER DETAILS METADATA LIST -->
+                <div class="pt-5 space-y-4 text-xs font-semibold">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 font-medium">FIDE ID</span>
+                        <span class="font-bold text-[#1c2d5a] text-[13px]">42901735</span>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 font-medium">Federation</span>
+                        <div class="flex items-center space-x-2">
+                            <!-- Exact Vector Norway Flag -->
+                            <svg class="w-5 h-3.5 rounded-[2px] shadow-sm overflow-hidden" viewBox="0 0 22 16">
+                                <rect width="22" height="16" fill="#ba0c2f"/>
+                                <rect x="6" width="4" height="16" fill="#ffffff"/>
+                                <rect y="6" width="22" height="4" fill="#ffffff"/>
+                                <rect x="7" width="2" height="16" fill="#00205b"/>
+                                <rect y="7" width="22" height="2" fill="#00205b"/>
+                            </svg>
+                            <span class="font-bold text-[#1c2d5a] text-[13px]">Norway</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 font-medium">B-Year</span>
+                        <span class="font-bold text-[#1c2d5a] text-[13px]">2015</span>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 font-medium">Gender</span>
+                        <span class="font-bold text-[#1c2d5a] text-[13px]">Male</span>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 font-medium">FIDE title</span>
+                        <span class="font-bold text-[#1c2d5a] text-[13px]">None</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT CARD: STATS & RANKings TAB -->
+            <div class="lg:col-span-8 fide-card p-6">
+                <!-- HORIZONTAL TAB STRIP -->
+                <div class="flex space-x-1 mb-8 overflow-x-auto text-[12px] font-bold">
+                    <button class="bg-white border border-gray-300 text-[#1c2d5a] px-6 py-2 rounded shadow-sm">Info</button>
+                    <button class="bg-[#1c2d5a] text-white px-6 py-2 rounded hover:bg-[#283d73] transition">Calculations</button>
+                    <button class="bg-[#1c2d5a] text-white px-6 py-2 rounded hover:bg-[#283d73] transition">Progress</button>
+                    <button class="bg-[#1c2d5a] text-white px-6 py-2 rounded hover:bg-[#283d73] transition">Stats</button>
+                    <button class="bg-[#1c2d5a] text-white px-6 py-2 rounded hover:bg-[#283d73] transition">FOA Rating</button>
+                </div>
+
+                <!-- RANK CARDS GRID -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <!-- World Rank -->
+                    <div class="bg-[#fcfdfe] border border-gray-100 rounded-lg p-5 shadow-sm">
+                        <h3 class="text-[13px] font-bold text-[#1c2d5a] mb-5">World Rank</h3>
+                        <div class="space-y-4 text-xs font-semibold">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600 font-medium leading-tight">Active<br>players</span>
+                                <span class="font-bold text-[#1c2d5a] text-[13px]">24041</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600 font-medium">All players</span>
+                                <span class="font-bold text-[#1c2d5a] text-[13px]">63651</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- National Rank GRE -->
+                    <div class="bg-[#fcfdfe] border border-gray-100 rounded-lg p-5 shadow-sm">
+                        <h3 class="text-[13px] font-bold text-[#1c2d5a] mb-5">National Rank GRE</h3>
+                        <div class="space-y-4 text-xs font-semibold">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600 font-medium">Active players</span>
+                                <span class="font-bold text-[#1c2d5a] text-[13px]">305</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600 font-medium">All players</span>
+                                <span class="font-bold text-[#1c2d5a] text-[13px]">575</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Continent Rank Europe -->
+                    <div class="bg-[#fcfdfe] border border-gray-100 rounded-lg p-5 shadow-sm">
+                        <h3 class="text-[13px] font-bold text-[#1c2d5a] mb-5">Continent Rank<br>Europe</h3>
+                        <div class="space-y-4 text-xs font-semibold">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600 font-medium leading-tight">Active<br>players</span>
+                                <span class="font-bold text-[#1c2d5a] text-[13px]">17634</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600 font-medium">All players</span>
+                                <span class="font-bold text-[#1c2d5a] text-[13px]">38503</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- CHESS KING WATERMARK SVG -->
+    <div class="relative w-full overflow-hidden">
+        <svg class="chess-king-watermark" viewBox="0 0 100 240" fill="#1c2d5a">
+            <path d="M50 10 L55 20 L65 20 L58 28 L62 38 L50 32 L38 38 L42 28 L35 20 L45 20 Z 
+                     M35 42 Q50 38 65 42 L68 90 Q50 95 32 90 Z 
+                     M30 96 H70 V106 H30 Z 
+                     M28 112 Q50 105 72 112 L78 200 H22 Z 
+                     M15 206 H85 V220 H15 Z"/>
+        </svg>
+
+        <!-- FOOTER SECTION -->
+        <footer class="w-full bg-[#dbe2eb] border-t border-gray-300/80 pt-10 pb-8 relative z-20">
+            <div class="max-w-[1380px] mx-auto px-4 sm:px-8">
+                
+                <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-8">
+                    <!-- FIDE FOOTER LOGO -->
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-11 h-11 text-[#1c2d5a]" viewBox="0 0 120 120" fill="currentColor">
+                            <path d="M60 10 C25 10 5 32 5 60 C5 88 25 110 60 110 C95 110 115 88 115 60 C115 32 95 10 60 10 Z" fill="#1c2d5a" />
+                            <path d="M12 40 H108 M8 60 H112 M12 80 H108 M32 18 C 45 40 45 80 32 102 M88 18 C 75 40 75 80 88 102" stroke="#ffffff" stroke-width="2.5" fill="none" />
+                            <path d="M50 32 C52 26 62 26 65 32 C65 35 60 38 60 42 C68 40 78 46 76 56 C74 62 68 64 68 68 C74 68 80 72 80 78 C80 84 72 86 68 86 C68 90 70 92 72 92 H44 C46 92 48 90 48 86 C44 86 36 84 36 78 C36 72 42 68 48 68 C48 64 42 62 40 56 C38 46 48 40 56 42 C56 38 50 35 50 32 Z" fill="#ffffff" />
+                        </svg>
+                        <div class="flex flex-col justify-center leading-tight">
+                            <span class="text-[15px] font-extrabold text-[#1c2d5a] tracking-tight">International</span>
+                            <span class="text-[15px] font-extrabold text-[#1c2d5a] tracking-tight">Chess Federation</span>
+                        </div>
+                    </div>
+
+                    <!-- FOOTER NAVIGATION LINKS -->
+                    <div class="flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-extrabold text-[#1c2d5a] tracking-wider uppercase">
+                        <a href="#" class="hover:underline">HOME</a>
+                        <a href="#" class="hover:underline">NEWS</a>
+                        <a href="#" class="hover:underline">RATINGS</a>
+                        <a href="#" class="hover:underline">CHAMPIONSHIP</a>
+                        <a href="#" class="hover:underline">CALENDAR</a>
+                        <a href="#" class="hover:underline">FIDE</a>
+                        <a href="#" class="hover:underline">CLEAN SPORT</a>
+                        <a href="#" class="hover:underline">PARTNERS</a>
+                        <a href="#" class="hover:underline">SHOP</a>
+                        <a href="#" class="hover:underline">CONTACTS</a>
+                        <a href="#" class="hover:underline">ARCHIVE</a>
+                        <a href="#" class="hover:underline">PRIVACY POLICY</a>
+                    </div>
+
+                    <!-- SOCIAL BADGES & SCROLL TOP BUTTON -->
+                    <div class="flex items-center space-x-3">
+                        <div class="flex flex-wrap gap-1.5 max-w-[160px]">
+                            <!-- X Badge -->
+                            <a href="#" class="w-7 h-7 bg-white rounded flex items-center justify-center text-[#1c2d5a] shadow-sm hover:bg-gray-50">
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            </a>
+                            <!-- Instagram Badge -->
+                            <a href="#" class="w-7 h-7 bg-white rounded flex items-center justify-center text-[#1c2d5a] shadow-sm hover:bg-gray-50">
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            </a>
+                            <!-- Facebook Badge -->
+                            <a href="#" class="w-7 h-7 bg-white rounded flex items-center justify-center text-[#1c2d5a] shadow-sm hover:bg-gray-50">
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"/></svg>
+                            </a>
+                            <!-- YouTube Badge -->
+                            <a href="#" class="w-7 h-7 bg-white rounded flex items-center justify-center text-[#1c2d5a] shadow-sm hover:bg-gray-50">
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            </a>
+                            <!-- Twitch Badge -->
+                            <a href="#" class="w-7 h-7 bg-white rounded flex items-center justify-center text-[#1c2d5a] shadow-sm hover:bg-gray-50">
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143h-1.715zm4.715 0h1.714v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+                            </a>
+                            <!-- TikTok Badge -->
+                            <a href="#" class="w-7 h-7 bg-white rounded flex items-center justify-center text-[#1c2d5a] shadow-sm hover:bg-gray-50">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.56-1.31 1.52-1.33 2.51-.01.99.41 1.98 1.19 2.59.88.69 2.08.87 3.13.51 1.02-.34 1.83-1.2 2.05-2.25.08-.47.09-.95.09-1.43-.01-5.11-.01-10.22-.01-15.34z"/></svg>
+                            </a>
+                            <!-- LinkedIn Badge -->
+                            <a href="#" class="w-7 h-7 bg-white rounded flex items-center justify-center text-[#1c2d5a] shadow-sm hover:bg-gray-50">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                            </a>
+                        </div>
+
+                        <!-- Back To Top Button -->
+                        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-500 shadow-md hover:bg-gray-100 transition">
+                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- COPYRIGHT NOTICE TEXT -->
+                <div class="border-t border-gray-300/80 pt-6 text-[11px] text-gray-500 max-w-3xl leading-relaxed">
+                    © 2026 FIDE International Chess Federation. All Rights Reserved. No part of this site may be reproduced, stored in a retrieval system or transmitted in any way or by any means (including photocopying, recording or storing it in any medium by electronic means), without the written permission of FIDE International Chess Federation.
+                </div>
+
+            </div>
+        </footer>
     </div>
-  </header>
 
-  <main class="page">
-    <h1 class="player-name">Alex Placeholder</h1>
-
-    <section class="profile">
-
-      <!-- LEFT COLUMN -->
-      <aside class="profile-left">
-        <div class="rating-boxes">
-          <div class="rating-box standard">
-            <span class="rb-label">Standard</span>
-            <span class="rb-value">1850</span>
-          </div>
-          <div class="rating-box rapid">
-            <span class="rb-label">Rapid</span>
-            <span class="rb-value">1790</span>
-          </div>
-          <div class="rating-box blitz">
-            <span class="rb-label">Blitz</span>
-            <span class="rb-value">1735</span>
-          </div>
-        </div>
-
-        <dl class="info-list">
-          <div><dt>Player ID</dt><dd>00000000</dd></div>
-          <div><dt>Federation</dt><dd>Anywhere</dd></div>
-          <div><dt>Birth year</dt><dd>2007</dd></div>
-          <div><dt>Gender</dt><dd>Male</dd></div>
-          <div><dt>Title</dt><dd>None</dd></div>
-        </dl>
-      </aside>
-
-      <!-- RIGHT COLUMN -->
-      <div class="profile-right">
-        <div class="tab-buttons" role="tablist">
-          <button class="tab-btn active" data-tab="info" role="tab">Info</button>
-          <button class="tab-btn" data-tab="progress" role="tab">Progress</button>
-          <button class="tab-btn" data-tab="stats" role="tab">Stats</button>
-        </div>
-
-        <!-- INFO TAB -->
-        <div class="tab-panel active" id="tab-info">
-          <div class="rank-grid">
-            <div class="rank-card">
-              <h3>World Rank</h3>
-              <div class="rank-row"><span>Active players</span><strong>24,041</strong></div>
-              <div class="rank-row"><span>All players</span><strong>63,651</strong></div>
-            </div>
-            <div class="rank-card">
-              <h3>National Rank</h3>
-              <div class="rank-row"><span>Active players</span><strong>305</strong></div>
-              <div class="rank-row"><span>All players</span><strong>575</strong></div>
-            </div>
-            <div class="rank-card">
-              <h3>Continent Rank</h3>
-              <div class="rank-row"><span>Active players</span><strong>17,634</strong></div>
-              <div class="rank-row"><span>All players</span><strong>38,503</strong></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- PROGRESS TAB -->
-        <div class="tab-panel" id="tab-progress">
-          <div class="range-buttons">
-            <button class="range-btn" data-months="12">1 yr</button>
-            <button class="range-btn" data-months="24">2 yr</button>
-            <button class="range-btn active" data-months="0">All</button>
-          </div>
-          <div class="chart-wrap"><canvas id="ratingChart"></canvas></div>
-
-          <div class="table-wrap">
-            <table class="history-table">
-              <thead>
-                <tr>
-                  <th>Period</th>
-                  <th>Std</th><th>Games</th>
-                  <th>Rapid</th><th>Games</th>
-                  <th>Blitz</th><th>Games</th>
-                </tr>
-              </thead>
-              <tbody id="historyBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- STATS TAB -->
-        <div class="tab-panel" id="tab-stats">
-          <h3 class="stats-title">Total games</h3>
-          <div class="stats-chart"><canvas id="statsAll"></canvas></div>
-          <h3 class="stats-title">Standard</h3>
-          <div class="stats-chart"><canvas id="statsStd"></canvas></div>
-          <h3 class="stats-title">Rapid</h3>
-          <div class="stats-chart"><canvas id="statsRpd"></canvas></div>
-          <h3 class="stats-title">Blitz</h3>
-          <div class="stats-chart"><canvas id="statsBlz"></canvas></div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <p>This is a template with placeholder data. Replace the name, ratings, and tables with your own.</p>
-  </footer>
-
-  <script>
-    /* ---------- EDIT YOUR DATA HERE ---------- */
-    // [period, standard, stdGames, rapid, rapidGames, blitz, blitzGames]
-    const history = [
-      ["2026-Oct", 1850, 0, 1790, 0, 1735, 0],
-      ["2026-Sep", 1850, 7, 1790, 0, 1735, 0],
-      ["2026-Aug", 1822, 0, 1790, 0, 1735, 0],
-      ["2026-Jul", 1822, 0, 1790, 9, 1735, 9],
-      ["2026-Jun", 1822, 9, 1768, 0, 1751, 0],
-      ["2026-May", 1790, 0, 1768, 0, 1751, 0],
-      ["2026-Apr", 1790, 0, 1768, 10, 1751, 0],
-      ["2026-Mar", 1790, 0, 1720, 0, 1751, 0],
-      ["2026-Feb", 1790, 0, 1720, 0, 1751, 0],
-      ["2026-Jan", 1790, 0, 1720, 0, 1751, 0],
-      ["2025-Dec", 1790, 0, 1720, 0, 1751, 0],
-      ["2025-Nov", 1790, 5, 1720, 0, 1751, 0],
-      ["2025-Oct", 1805, 0, 1720, 0, 1751, 0],
-      ["2025-Sep", 1805, 0, 1720, 0, 1751, 0],
-      ["2025-Aug", 1805, 0, 1720, 0, 1751, 0],
-      ["2025-Jul", 1805, 0, 1720, 0, 1751, 9]
-    ];
-
-    // [wins, draws, losses] for White and Black
-    const stats = {
-      all: { white: [14, 6, 8],  black: [10, 7, 11] },
-      std: { white: [6, 3, 3],   black: [4, 3, 5] },
-      rpd: { white: [5, 2, 3],   black: [3, 2, 4] },
-      blz: { white: [3, 1, 2],   black: [3, 2, 2] }
-    };
-    /* ----------------------------------------- */
-
-    // Mobile menu
-    document.getElementById("burger").addEventListener("click", function () {
-      this.classList.toggle("open");
-      document.getElementById("mainNav").classList.toggle("open");
-    });
-
-    // Table
-    const body = document.getElementById("historyBody");
-    history.forEach(function (r) {
-      const tr = document.createElement("tr");
-      tr.innerHTML = r.map(function (c) { return "<td>" + c + "</td>"; }).join("");
-      body.appendChild(tr);
-    });
-
-    // Rating chart
-    let ratingChart;
-    function drawRating(months) {
-      let rows = history.slice().reverse();
-      if (months > 0) rows = rows.slice(-months);
-      const data = {
-        labels: rows.map(function (r) { return r[0]; }),
-        datasets: [
-          { label: "Standard", data: rows.map(function (r) { return r[1]; }), borderColor: "#0f766e", backgroundColor: "#0f766e", tension: 0.3 },
-          { label: "Rapid",    data: rows.map(function (r) { return r[3]; }), borderColor: "#d9480f", backgroundColor: "#d9480f", tension: 0.3 },
-          { label: "Blitz",    data: rows.map(function (r) { return r[5]; }), borderColor: "#6d28d9", backgroundColor: "#6d28d9", tension: 0.3 }
-        ]
-      };
-      if (ratingChart) ratingChart.destroy();
-      ratingChart = new Chart(document.getElementById("ratingChart"), {
-        type: "line",
-        data: data,
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "bottom" } } }
-      });
-    }
-
-    document.querySelectorAll(".range-btn").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        document.querySelectorAll(".range-btn").forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        drawRating(parseInt(btn.dataset.months, 10));
-      });
-    });
-
-    // Stats charts
-    function drawStats(canvasId, s, showLegend) {
-      new Chart(document.getElementById(canvasId), {
-        type: "bar",
-        data: {
-          labels: ["White", "Black"],
-          datasets: [
-            { label: "Win",  backgroundColor: "#0f766e", data: [s.white[0], s.black[0]] },
-            { label: "Draw", backgroundColor: "#9ca3af", data: [s.white[1], s.black[1]] },
-            { label: "Loss", backgroundColor: "#374151", data: [s.white[2], s.black[2]] }
-          ]
-        },
-        options: {
-          indexAxis: "y",
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: showLegend, position: "bottom" } },
-          scales: { x: { stacked: true }, y: { stacked: true } }
-        }
-      });
-    }
-
-    // Tabs (charts draw when their tab first opens so sizing is correct)
-    const drawn = {};
-    document.querySelectorAll(".tab-btn").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
-        document.querySelectorAll(".tab-panel").forEach(function (p) { p.classList.remove("active"); });
-        btn.classList.add("active");
-        const tab = btn.dataset.tab;
-        document.getElementById("tab-" + tab).classList.add("active");
-
-        if (tab === "progress" && !drawn.progress) { drawRating(0); drawn.progress = true; }
-        if (tab === "stats" && !drawn.stats) {
-          drawStats("statsAll", stats.all, true);
-          drawStats("statsStd", stats.std, false);
-          drawStats("statsRpd", stats.rpd, false);
-          drawStats("statsBlz", stats.blz, false);
-          drawn.stats = true;
-        }
-      });
-    });
-  </script>
 </body>
 </html>
